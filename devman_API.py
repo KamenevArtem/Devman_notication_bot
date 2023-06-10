@@ -4,6 +4,7 @@ import requests
 from dotenv import load_dotenv
 from pprint import pprint
 
+
 def main():
     load_dotenv()
     access_token = os.environ['DEVMAN_API_TOKEN']
