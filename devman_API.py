@@ -12,9 +12,16 @@ def main():
     headers = {
         'Authorization': f'Token {access_token}'
     }
-    response = requests.get(reviews_url, headers=headers)
-    response.raise_for_status()
-    pprint(response.json())
+    reviews_response = requests.get(reviews_url, headers=headers)
+    reviews_response.raise_for_status()
+    long_polling_url = 'https://dvmn.org/api/long_polling/'
+    while True:
+        long_polling_response = requests.get(
+            long_polling_url,
+            headers=headers,
+        )
+        long_polling_response.raise_for_status()
+        pprint(long_polling_response.json())
 
 
 if __name__ == '__main__':
