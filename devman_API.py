@@ -23,7 +23,8 @@ def long_polling_reviews(headers, timeout):
         long_polling_response.raise_for_status()
         pprint(long_polling_response.json())
         return long_polling_response.json()
-    except requests.exceptions.ReadTimeout:
+    except (requests.exceptions.ReadTimeout,
+    requests.exceptions.ConnectionError):
         pass
 
 
