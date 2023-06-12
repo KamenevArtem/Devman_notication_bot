@@ -14,14 +14,17 @@ def get_user_reviews(headers):
 
 def long_polling_reviews(headers, timeout):
     url = 'https://dvmn.org/api/long_polling/'
-    while True:
+    try:
         long_polling_response = requests.get(
             url,
             headers=headers,
             timeout=timeout
         )
         long_polling_response.raise_for_status()
+        pprint(long_polling_response.json())
         return long_polling_response.json()
+    except requests.exceptions.ReadTimeout:
+        pass
 
 
 def main():
@@ -31,12 +34,10 @@ def main():
         'Authorization': f'Token {access_token}'
     }
     timeout = 3
-    pprint(get_user_reviews(headers))
-    pprint(long_polling_reviews(headers, timeout))
+    get_user_reviews(headers)
+    while True:
+        long_polling_reviews(headers, timeout)
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except requests.exceptions.ReadTimeout:
-        main()
+    main()
