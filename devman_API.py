@@ -14,18 +14,14 @@ def get_user_reviews(headers):
 
 def long_polling_reviews(headers, timeout):
     url = 'https://dvmn.org/api/long_polling/'
-    try:
-        long_polling_response = requests.get(
-            url,
-            headers=headers,
-            timeout=timeout
-        )
-        long_polling_response.raise_for_status()
-        pprint(long_polling_response.json())
-        return long_polling_response.json()
-    except (requests.exceptions.ReadTimeout,
-    requests.exceptions.ConnectionError):
-        pass
+    long_polling_response = requests.get(
+        url,
+        headers=headers,
+        timeout=timeout
+    )
+    long_polling_response.raise_for_status()
+    pprint(long_polling_response.json())
+    return long_polling_response.json()
 
 
 def main():
@@ -37,7 +33,11 @@ def main():
     timeout = 3
     get_user_reviews(headers)
     while True:
-        long_polling_reviews(headers, timeout)
+        try:
+            long_polling_reviews(headers, timeout)
+        except (requests.exceptions.ReadTimeout,
+        requests.exceptions.ConnectionError):
+            pass
 
 
 if __name__ == '__main__':
