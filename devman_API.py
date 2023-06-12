@@ -9,6 +9,7 @@ def get_user_reviews(headers):
     url = 'https://dvmn.org/api/user_reviews/'
     reviews_response = requests.get(url, headers=headers)
     reviews_response.raise_for_status()
+    return reviews_response.json()
 
 
 def long_polling_reviews(headers, timeout):
@@ -20,7 +21,7 @@ def long_polling_reviews(headers, timeout):
             timeout=timeout
         )
         long_polling_response.raise_for_status()
-        return long_polling_response
+        return long_polling_response.json()
 
 
 def main():
@@ -30,7 +31,7 @@ def main():
         'Authorization': f'Token {access_token}'
     }
     timeout = 3
-    get_user_reviews(headers)
+    pprint(get_user_reviews(headers))
     pprint(long_polling_reviews(headers, timeout))
 
 
