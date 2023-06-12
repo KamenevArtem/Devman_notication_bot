@@ -17,7 +17,6 @@ def long_polling_reviews(headers, timeout):
     long_polling_response = requests.get(
         url,
         headers=headers,
-        timeout=timeout
     )
     long_polling_response.raise_for_status()
     pprint(long_polling_response.json())
@@ -30,11 +29,10 @@ def main():
     headers = {
         'Authorization': f'Token {access_token}'
     }
-    timeout = 3
     get_user_reviews(headers)
     while True:
         try:
-            long_polling_reviews(headers, timeout)
+            long_polling_reviews(headers)
         except (requests.exceptions.ReadTimeout,
         requests.exceptions.ConnectionError):
             pass
