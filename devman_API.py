@@ -4,6 +4,7 @@ import telegram
 
 from dotenv import load_dotenv
 
+
 load_dotenv()
 dev_access_token = os.environ['DEVMAN_API_TOKEN']
 bot_token = os.environ['TG_BOT_TOKEN']
@@ -36,13 +37,26 @@ def long_polling_reviews(headers):
             params=params
         )
         timestamp_response.raise_for_status()
-        return timestamp_response.json()
-    else:
-        bot.send_message(
-            chat_id=chat_id,
-            text='Преподаватель проверил работу!'
-            )
-        return long_polling_response.json()
+        response = timestamp_response.json()
+    if response['status'] == 'found':
+        notification_text = 'У Вас проверили работу, отправляем уведомление о проверке работ.'
+        mistakes_notification_text = 'К сожалению в работе нашлись ошибки!'
+        approved_text = 'Преподавателю все понравилось, можно приступать к следующему уроку'
+        lesson_response = response['new_attempts']
+        last_lesson_description = lesson_response[0]
+        lesson_url = last_lesson_description['lesson_url']
+        if last_lesson_description['is_negative']:
+            bot.send_message(
+                chat_id=chat_id,
+                text=f'{notification_text}\n{mistakes_notification_text}\n'
+                f'Ссылка на урок: {lesson_url}'
+                )
+        else:
+            bot.send_message(
+                chat_id=chat_id,
+                text=f'{notification_text}\n{approved_text}'
+                )
+    return response
 
 
 def main():
