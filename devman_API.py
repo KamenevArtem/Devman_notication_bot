@@ -1,7 +1,14 @@
 import os
 import requests
+import telegram
 
 from dotenv import load_dotenv
+
+load_dotenv()
+dev_access_token = os.environ['DEVMAN_API_TOKEN']
+bot_token = os.environ['TG_BOT_TOKEN']
+chat_id = os.environ['CHAT_ID']
+bot = telegram.Bot(token=bot_token)
 
 
 def get_user_reviews(headers):
@@ -31,14 +38,16 @@ def long_polling_reviews(headers):
         timestamp_response.raise_for_status()
         return timestamp_response.json()
     else:
+        bot.send_message(
+            chat_id=chat_id,
+            text='Преподаватель проверил работу!'
+            )
         return long_polling_response.json()
 
 
 def main():
-    load_dotenv()
-    access_token = os.environ['DEVMAN_API_TOKEN']
     headers = {
-        'Authorization': f'Token {access_token}'
+        'Authorization': f'Token {dev_access_token}'
     }
     get_user_reviews(headers)
     while True:
