@@ -2,7 +2,6 @@ import os
 import requests
 
 from dotenv import load_dotenv
-from pprint import pprint
 
 
 def get_user_reviews(headers):
@@ -12,15 +11,27 @@ def get_user_reviews(headers):
     return reviews_response.json()
 
 
-def long_polling_reviews(headers, timeout):
+def long_polling_reviews(headers):
     url = 'https://dvmn.org/api/long_polling/'
     long_polling_response = requests.get(
         url,
         headers=headers,
     )
     long_polling_response.raise_for_status()
-    pprint(long_polling_response.json())
-    return long_polling_response.json()
+    response = long_polling_response.json()
+    if 'timestamp_to_request' in response:
+        params = {
+            'timestamp': {response['timestamp_to_request']}
+        }
+        timestamp_response = requests.get(
+            url,
+            headers=headers,
+            params=params
+        )
+        timestamp_response.raise_for_status()
+        return timestamp_response.json()
+    else:
+        return long_polling_response.json()
 
 
 def main():
