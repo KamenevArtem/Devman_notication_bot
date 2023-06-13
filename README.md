@@ -20,15 +20,16 @@ pip install -r requirements.txt
 
 * `CHAT_ID` - id чата пользователя. Для получения необходимо написать в Telegram специальному боту: [@userinfobot](https://telegram.me/userinfobot)
 
-На MacOs и Windows cкрипт запускается следующими командами соответственно:
+Cкрипт запускается командой:
 
 ```
 python3 bot.py
 ```
-или
+на MacOs/Linux и
 ```
 python bot.py
 ```
+на Windows
 
 ## Цель проекта
 Код написан в образовательных целях на онлайн-курсе для веб-разработчиков [devman](https://dvmn.org/)
