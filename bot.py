@@ -5,13 +5,6 @@ import telegram
 from dotenv import load_dotenv
 
 
-load_dotenv()
-dev_access_token = os.environ['DEVMAN_API_TOKEN']
-bot_token = os.environ['TG_BOT_TOKEN']
-chat_id = os.environ['CHAT_ID']
-bot = telegram.Bot(token=bot_token)
-
-
 def get_user_reviews(headers):
     url = 'https://dvmn.org/api/user_reviews/'
     reviews_response = requests.get(url, headers=headers)
@@ -19,7 +12,8 @@ def get_user_reviews(headers):
     return reviews_response.json()
 
 
-def long_polling_reviews(headers):
+def long_polling_reviews(headers, chat_id, bot_token):
+    bot = telegram.Bot(token=bot_token)
     url = 'https://dvmn.org/api/long_polling/'
     long_polling_response = requests.get(
         url,
@@ -60,13 +54,17 @@ def long_polling_reviews(headers):
 
 
 def main():
+    load_dotenv()
+    dev_access_token = os.environ['DEVMAN_API_TOKEN']
+    bot_token = os.environ['TG_BOT_TOKEN']
+    chat_id = os.environ['CHAT_ID']
     headers = {
         'Authorization': f'Token {dev_access_token}'
     }
     get_user_reviews(headers)
     while True:
         try:
-            long_polling_reviews(headers)
+            long_polling_reviews(headers, chat_id, bot_token)
         except (requests.exceptions.ReadTimeout,
         requests.exceptions.ConnectionError):
             pass
