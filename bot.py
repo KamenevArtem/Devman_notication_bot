@@ -20,10 +20,10 @@ def long_polling_reviews(headers, chat_id, bot_token):
         headers=headers,
     )
     long_polling_response.raise_for_status()
-    response = long_polling_response.json()
-    if 'timestamp_to_request' in response:
+    review_description = long_polling_response.json()
+    if 'timestamp_to_request' in review_description:
         params = {
-            'timestamp': {response['timestamp_to_request']}
+            'timestamp': {review_description['timestamp_to_request']}
         }
         timestamp_response = requests.get(
             url,
@@ -31,12 +31,12 @@ def long_polling_reviews(headers, chat_id, bot_token):
             params=params
         )
         timestamp_response.raise_for_status()
-        response = timestamp_response.json()
-    if response['status'] == 'found':
+        review_description = timestamp_response.json()
+    if review_description['status'] == 'found':
         notification_text = 'У Вас проверили работу, отправляем уведомление о проверке работ.'
         mistakes_notification_text = 'К сожалению в работе нашлись ошибки!'
         approved_text = 'Преподавателю все понравилось, можно приступать к следующему уроку'
-        lesson_response = response['new_attempts']
+        lesson_response = review_description['new_attempts']
         last_lesson_description = lesson_response[0]
         lesson_url = last_lesson_description['lesson_url']
         if last_lesson_description['is_negative']:
@@ -50,7 +50,7 @@ def long_polling_reviews(headers, chat_id, bot_token):
                 chat_id=chat_id,
                 text=f'{notification_text}\n{approved_text}'
                 )
-    return response
+    return review_description
 
 
 def main():
