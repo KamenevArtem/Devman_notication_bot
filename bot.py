@@ -8,13 +8,6 @@ from dotenv import load_dotenv
 from time import sleep
 
 
-def get_user_reviews(headers):
-    url = 'https://dvmn.org/api/user_reviews/'
-    reviews_response = requests.get(url, headers=headers)
-    reviews_response.raise_for_status()
-    return reviews_response.json()
-
-
 def long_polling_reviews(headers, chat_id, bot_token, timestamp):
     bot = telegram.Bot(token=bot_token)
     url = 'https://dvmn.org/api/long_polling/'
