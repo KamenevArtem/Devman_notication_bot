@@ -64,7 +64,6 @@ def main():
         except (requests.exceptions.ReadTimeout,
         requests.exceptions.ConnectionError):
             sleep(5)
-            pass
 
 
 if __name__ == '__main__':
