@@ -25,13 +25,6 @@ def long_polling_reviews(headers, chat_id, bot_token):
         params = {
             'timestamp': {review_description['timestamp_to_request']}
         }
-        timestamp_response = requests.get(
-            url,
-            headers=headers,
-            params=params
-        )
-        timestamp_response.raise_for_status()
-        review_description = timestamp_response.json()
     if review_description['status'] == 'found':
         notification_text = 'У Вас проверили работу, отправляем уведомление о проверке работ.'
         mistakes_notification_text = 'К сожалению в работе нашлись ошибки!'
@@ -61,7 +54,6 @@ def main():
     headers = {
         'Authorization': f'Token {dev_access_token}'
     }
-    get_user_reviews(headers)
     while True:
         try:
             long_polling_reviews(headers, chat_id, bot_token)
