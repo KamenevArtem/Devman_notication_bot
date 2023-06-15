@@ -62,7 +62,6 @@ def main():
     timestamp = time.time()
     while True:
         try:
-            print(timestamp)
             timestamp = long_polling_reviews(
                 headers,
                 chat_id,
