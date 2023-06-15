@@ -1,8 +1,10 @@
 import os
+
 import requests
 import telegram
 
 from dotenv import load_dotenv
+from time import sleep
 
 
 def get_user_reviews(headers):
@@ -59,6 +61,7 @@ def main():
             long_polling_reviews(headers, chat_id, bot_token)
         except (requests.exceptions.ReadTimeout,
         requests.exceptions.ConnectionError):
+            sleep(5)
             pass
 
 
