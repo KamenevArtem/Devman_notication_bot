@@ -1,4 +1,5 @@
 import os
+import time
 
 import requests
 import telegram
@@ -14,19 +15,21 @@ def get_user_reviews(headers):
     return reviews_response.json()
 
 
-def long_polling_reviews(headers, chat_id, bot_token):
+def long_polling_reviews(headers, chat_id, bot_token, timestamp):
     bot = telegram.Bot(token=bot_token)
     url = 'https://dvmn.org/api/long_polling/'
+    params = {
+        'timestamp': timestamp
+    }
     long_polling_response = requests.get(
         url,
         headers=headers,
+        params=params
     )
     long_polling_response.raise_for_status()
     review_description = long_polling_response.json()
-    if 'timestamp_to_request' in review_description:
-        params = {
-            'timestamp': {review_description['timestamp_to_request']}
-        }
+    if 'last_attempt_timestamp' in review_description:
+        timestamp = review_description['last_attempt_timestamp']
     if review_description['status'] == 'found':
         notification_text = 'У Вас проверили работу, отправляем уведомление о проверке работ.'
         mistakes_notification_text = 'К сожалению в работе нашлись ошибки!'
@@ -45,7 +48,7 @@ def long_polling_reviews(headers, chat_id, bot_token):
                 chat_id=chat_id,
                 text=f'{notification_text}\n{approved_text}'
                 )
-    return review_description
+    return timestamp
 
 
 def main():
@@ -56,9 +59,16 @@ def main():
     headers = {
         'Authorization': f'Token {dev_access_token}'
     }
+    timestamp = time.time()
     while True:
         try:
-            long_polling_reviews(headers, chat_id, bot_token)
+            print(timestamp)
+            timestamp = long_polling_reviews(
+                headers,
+                chat_id,
+                bot_token,
+                timestamp
+                )
         except (requests.exceptions.ReadTimeout,
         requests.exceptions.ConnectionError):
             sleep(5)
