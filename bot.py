@@ -61,9 +61,10 @@ def main():
                 bot_token,
                 timestamp
                 )
-        except (requests.exceptions.ReadTimeout,
-        requests.exceptions.ConnectionError):
+        except requests.exceptions.ConnectionError:
             sleep(5)
+        except requests.exceptions.ReadTimeout:
+            pass
 
 
 if __name__ == '__main__':
