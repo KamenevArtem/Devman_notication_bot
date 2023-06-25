@@ -8,7 +8,10 @@ from dotenv import load_dotenv
 from time import sleep
 
 
-def long_polling_reviews(headers, timestamp):
+def long_polling_reviews(
+        headers,
+        timestamp
+        ):
     url = 'https://dvmn.org/api/long_polling/'
     params = {
         'timestamp': timestamp
@@ -25,7 +28,11 @@ def long_polling_reviews(headers, timestamp):
     return timestamp, review_description
 
 
-def send_review(chat_id, bot_token, review_description):
+def send_review(
+        chat_id,
+        bot_token,
+        review_description
+        ):
     bot = telegram.Bot(token=bot_token)
     if review_description['status'] == 'found':
         lesson_response = review_description['new_attempts']
