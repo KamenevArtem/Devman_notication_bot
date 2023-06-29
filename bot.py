@@ -41,17 +41,17 @@ def send_review(
         notification_text = 'У Вас проверили работу, отправляем уведомление о проверке работ.'
         mistakes_notification_text = 'К сожалению в работе нашлись ошибки!'
         approved_text = 'Преподавателю все понравилось, можно приступать к следующему уроку'
-    if last_lesson_description['is_negative']:
+        if last_lesson_description['is_negative']:
+                bot.send_message(
+                    chat_id=chat_id,
+                    text=f'{notification_text}\n{mistakes_notification_text}\n'
+                    f'Ссылка на урок: {lesson_url}'
+                    )
+        else:
             bot.send_message(
                 chat_id=chat_id,
-                text=f'{notification_text}\n{mistakes_notification_text}\n'
-                f'Ссылка на урок: {lesson_url}'
+                text=f'{notification_text}\n{approved_text}'
                 )
-    else:
-        bot.send_message(
-            chat_id=chat_id,
-            text=f'{notification_text}\n{approved_text}'
-            )
 
 
 def main():
