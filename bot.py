@@ -64,13 +64,12 @@ def main():
         'Authorization': f'Token {dev_access_token}'
     }
     timestamp = time.time()
+    logging.basicConfig(level=logging.DEBUG)
     logging.debug('Сообщение для дебагинга')
     logging.info('Произошло какое-то событие. Всё идёт по плану.')
     logging.warning('Предупреждение, что-то могло сломаться')
     logging.error('Ошибка, что-то сломалось')
     logging.critical('МЫ В ОГНЕ ЧТО ДЕЛАТЬ?!?!')
-    logging.basicConfig(level=logging.DEBUG)
-    logging.debug('Сообщение уровня DEBUG')
     while True:
         try:
             timestamp, review_description = long_polling_reviews(
