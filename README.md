@@ -16,9 +16,13 @@ pip install -r requirements.txt
 
 * `DEVMAN_API_TOKEN` - токен API Devman. Получить его можно, пройдя по [ссылке](https://dvmn.org/api/docs/);
 
-* `TG_BOT_TOKEN` - токен бота. Он может быть получен сразу после создания бота. [Инструкция по созданию бота](https://habr.com/ru/articles/262247/) 
+* `TG_BOT_TOKEN` - токен бота. Он может быть получен сразу после создания бота. [Инструкция по созданию бота](https://habr.com/ru/articles/262247/);
 
-* `CHAT_ID` - id чата пользователя. Для получения необходимо написать в Telegram специальному боту: [@userinfobot](https://telegram.me/userinfobot)
+* `CHAT_ID` - id чата пользователя. Для получения необходимо написать в Telegram специальному боту: [@userinfobot](https://telegram.me/userinfobot);
+
+* `USER_CHAT_ID` - id чата пользователя для получения инОрмации об ошибках;
+
+* `LOGGER_BOT_TOKEN` - токен второго бота, предназначенного для отслеживания ошибок.
 
 Cкрипт запускается командой:
 
