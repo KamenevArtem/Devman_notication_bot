@@ -8,6 +8,8 @@ import telegram
 from dotenv import load_dotenv
 from time import sleep
 
+from tg_logger import TelegramLogsHandler
+
 
 def long_polling_reviews(
         headers,
@@ -31,10 +33,9 @@ def long_polling_reviews(
 
 def send_review(
         chat_id,
-        bot_token,
+        bot,
         review_description
         ):
-    bot = telegram.Bot(token=bot_token)
     if review_description['status'] == 'found':
         lesson_response = review_description['new_attempts']
         last_lesson_description = lesson_response[0]
@@ -59,17 +60,21 @@ def main():
     load_dotenv()
     dev_access_token = os.environ['DEVMAN_API_TOKEN']
     bot_token = os.environ['TG_BOT_TOKEN']
+    logger_bot_token = os.environ['LOGGER_BOT_TOKEN']
+    user_id = os.environ['USER_CHAT_ID']
     chat_id = os.environ['CHAT_ID']
+    tg_bot = telegram.Bot(token=bot_token)
+    logger_bot = telegram.Bot(token=logger_bot_token)
     headers = {
         'Authorization': f'Token {dev_access_token}'
     }
     timestamp = time.time()
-    logging.basicConfig(level=logging.DEBUG)
-    logging.debug('Сообщение для дебагинга')
-    logging.info('Произошло какое-то событие. Всё идёт по плану.')
-    logging.warning('Предупреждение, что-то могло сломаться')
-    logging.error('Ошибка, что-то сломалось')
-    logging.critical('МЫ В ОГНЕ ЧТО ДЕЛАТЬ?!?!')
+    logger = logging.getLogger('Logger')
+    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    logging.basicConfig(format=format)
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(TelegramLogsHandler(logger_bot, user_id))
+    logger.info('Бот запущен')
     while True:
         try:
             timestamp, review_description = long_polling_reviews(
@@ -78,12 +83,14 @@ def main():
                 )
             send_review(
                 chat_id,
-                bot_token,
+                tg_bot,
                 review_description
                 )
         except requests.exceptions.ConnectionError:
+            logger.error('Ошибка соединения')
             sleep(5)
         except requests.exceptions.ReadTimeout:
+            logger.error('Превышено время ожидания ответа')
             pass
 
 
