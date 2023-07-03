@@ -19,7 +19,7 @@ chat_id = os.environ['CHAT_ID']
 logger = logging.getLogger('Logger')
 
 
-def long_polling_reviews(
+def get_review_description(
         headers,
         timestamp
         ):
