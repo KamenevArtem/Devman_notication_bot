@@ -11,6 +11,9 @@ from time import sleep
 from tg_logger import TelegramLogsHandler
 
 
+logger = logging.getLogger('Logger')
+
+
 def long_polling_reviews(
         headers,
         timestamp
@@ -69,7 +72,6 @@ def main():
         'Authorization': f'Token {dev_access_token}'
     }
     timestamp = time.time()
-    logger = logging.getLogger('Logger')
     format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(format=format)
     logger.setLevel(logging.DEBUG)
