@@ -10,12 +10,7 @@ from time import sleep
 
 from tg_logger import TelegramLogsHandler
 
-load_dotenv()
-dev_access_token = os.environ['DEVMAN_API_TOKEN']
-bot_token = os.environ['TG_BOT_TOKEN']
-logger_bot_token = os.environ['LOGGER_BOT_TOKEN']
-user_id = os.environ['USER_CHAT_ID']
-chat_id = os.environ['CHAT_ID']
+
 logger = logging.getLogger('Logger')
 
 
@@ -70,10 +65,9 @@ def main():
         'Authorization': f'Token {dev_access_token}'
     }
     timestamp = time.time()
-    
     while True:
         try:
-            timestamp, review_description = long_polling_reviews(
+            timestamp, review_description = get_review_description(
                 headers,
                 timestamp
                 )
@@ -91,6 +85,12 @@ def main():
 
 
 if __name__ == '__main__':
+    load_dotenv()
+    dev_access_token = os.environ['DEVMAN_API_TOKEN']
+    bot_token = os.environ['TG_BOT_TOKEN']
+    logger_bot_token = os.environ['LOGGER_BOT_TOKEN']
+    user_id = os.environ['USER_CHAT_ID']
+    chat_id = os.environ['CHAT_ID']
     logger_bot = telegram.Bot(token=logger_bot_token)
     format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(format=format)
