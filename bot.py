@@ -10,7 +10,12 @@ from time import sleep
 
 from tg_logger import TelegramLogsHandler
 
-
+load_dotenv()
+dev_access_token = os.environ['DEVMAN_API_TOKEN']
+bot_token = os.environ['TG_BOT_TOKEN']
+logger_bot_token = os.environ['LOGGER_BOT_TOKEN']
+user_id = os.environ['USER_CHAT_ID']
+chat_id = os.environ['CHAT_ID']
 logger = logging.getLogger('Logger')
 
 
@@ -60,23 +65,12 @@ def send_review(
 
 
 def main():
-    load_dotenv()
-    dev_access_token = os.environ['DEVMAN_API_TOKEN']
-    bot_token = os.environ['TG_BOT_TOKEN']
-    logger_bot_token = os.environ['LOGGER_BOT_TOKEN']
-    user_id = os.environ['USER_CHAT_ID']
-    chat_id = os.environ['CHAT_ID']
     tg_bot = telegram.Bot(token=bot_token)
-    logger_bot = telegram.Bot(token=logger_bot_token)
     headers = {
         'Authorization': f'Token {dev_access_token}'
     }
     timestamp = time.time()
-    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(format=format)
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(TelegramLogsHandler(logger_bot, user_id))
-    logger.info('Бот запущен')
+    
     while True:
         try:
             timestamp, review_description = long_polling_reviews(
@@ -97,4 +91,10 @@ def main():
 
 
 if __name__ == '__main__':
+    logger_bot = telegram.Bot(token=logger_bot_token)
+    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    logging.basicConfig(format=format)
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(TelegramLogsHandler(logger_bot, user_id))
+    logger.info('Бот запущен')
     main()
