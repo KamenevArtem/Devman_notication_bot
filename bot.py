@@ -94,7 +94,8 @@ def main():
 
 
 if __name__ == '__main__':
-    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(format=format)
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        )
     logger.setLevel(logging.DEBUG)
     main()
