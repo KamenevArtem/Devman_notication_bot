@@ -68,6 +68,10 @@ def main():
     user_id = os.environ['USER_CHAT_ID']
     logger_bot = telegram.Bot(token=logger_bot_token)
     tg_bot = telegram.Bot(token=bot_token)
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        )
+    logger.setLevel(logging.DEBUG)
     logger.addHandler(TelegramLogsHandler(logger_bot, user_id))
     headers = {
         'Authorization': f'Token {dev_access_token}'
@@ -94,8 +98,4 @@ def main():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
-    logger.setLevel(logging.DEBUG)
     main()
