@@ -35,6 +35,31 @@ python bot.py
 ```
 на Windows
 
+
+## Как запустить бота при помощи docker
+
+- Убедитесь что у вас установлен docker. Про [установку docker](https://docs.docker.com/get-docker/).
+- Соберите докер образ текущего проекта запустив команду:
+
+
+```
+docker build --tag notification_bot .
+``` 
+Подробнее про [docker build images](https://docs.docker.com/language/python/build-images/).
+
+- Через команду 
+```
+docker run  --restart=always --env-file .env notification_bot
+```
+запустите докер контейнер на основе собранного ранее образа проекта.
+- В случае успешного запуска докер контейнера, в телеграм придет следующее сообщение: `Бот запущен`
+  
+- Для остановки работы контейнера используйте команду 
+```
+docker stop CONTAINER_ID
+```
+Узнать CONTAINER_ID можно выполнив команду `docker ps`. [Подробнее про run containers](https://docs.docker.com/language/python/run-containers/).
+
 ## Цель проекта
 Код написан в образовательных целях на онлайн-курсе для веб-разработчиков [devman](https://dvmn.org/)
 
